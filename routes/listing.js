@@ -1,9 +1,9 @@
 const express = require("express");
-const catchAsync = require("../utils/catchAsync.js");
+const CatchAsync = require("../utils/CatchAsync.js");
 const { getExploreProducts, getHomepageProduct } = require("../controllers/listing.js");
 const router = express.Router();
 
-router.get("/explore", catchAsync(getExploreProducts));
-router.get("/homepage", catchAsync(getHomepageProduct));
+router.get("/explore", CatchAsync(getExploreProducts));
+router.get("/homepage", CatchAsync(getHomepageProduct));
 
 module.exports = router;
