@@ -1,3 +1,4 @@
+const { Types, isValidObjectId } = require("mongoose");
 const Product = require("../models/Product.js");
 
 const getExploreProducts = async (req, res) => {
@@ -15,4 +16,16 @@ const getHomepageProduct = async (req, res) => {
   return res.status(200).send({ message: "Successfully Fetched Product", data: latest });
 };
 
-module.exports = { getExploreProducts, getHomepageProduct };
+const getProductsByUser = async (req, res) => {
+  const { user } = req.query;
+
+  if (!isValidObjectId(user)) {
+    return res.status(400).send({ error: "Not a Valid User ID" });
+  }
+
+  const products = await Product.find({ owner: new Types.ObjectId(user) });
+
+  return res.status(200).send({ message: "Successfully Fetched Products", data: products });
+};
+
+module.exports = { getExploreProducts, getHomepageProduct, getProductsByUser };

@@ -9,6 +9,7 @@ const authenticationRoutes = require("./routes/authentication.js");
 const productRoutes = require("./routes/product.js");
 const listingRoutes = require("./routes/listing.js");
 const biddingRoutes = require("./routes/bidding.js");
+const sellerRoutes = require("./routes/seller.js");
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.use("/api/auth", authenticationRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/listings", listingRoutes);
 app.use("/api/bidding", biddingRoutes);
+app.use("/api/seller", sellerRoutes);
 
 module.exports = app;
