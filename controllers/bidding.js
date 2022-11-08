@@ -1,3 +1,4 @@
+const { Types, isValidObjectId } = require("mongoose");
 const Product = require("../models/Product.js");
 
 const addBid = async (req, res) => {
@@ -45,4 +46,37 @@ const addBid = async (req, res) => {
   return res.status(200).send({ message: "Bid Added Successfully", data: product });
 };
 
-module.exports = { addBid };
+const getBidsByUser = async (req, res) => {
+  const { owner } = req.query;
+
+  if (!isValidObjectId(owner)) {
+    return res.status(400).send({ error: "Not a Valid User ID" });
+  }
+
+  if (req.token.id !== owner) {
+    return res.status(403).send({ error: "You can only Fetch your own Past Bids" });
+  }
+
+  const bids = await Product.aggregate([
+    {
+      $match: {
+        bids: { $elemMatch: { 'owner': new Types.ObjectId(owner) } }
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        description: 1,
+        images: 1,
+        bids: {
+          $filter: { input: "$bids", as: "bid", cond: { $eq: [ "$$bid.owner", new Types.ObjectId(owner) ] } }
+        }
+      }
+    }
+  ]);
+
+  return res.status(200).send({ message: "Successfully Fetched Bids", data: bids });
+};
+
+module.exports = { addBid, getBidsByUser };

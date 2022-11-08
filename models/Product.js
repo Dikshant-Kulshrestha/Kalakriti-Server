@@ -47,6 +47,16 @@ const productSchema = new mongoose.Schema({
       filename: String,
     },
   ],
+
+  winner: {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    amount: {
+      type: Number,
+    }
+  }
 });
 
 module.exports = mongoose.model("product", productSchema);

@@ -16,6 +16,13 @@ const addProduct = async (req, res) => {
 
   await product.save();
 
+  /* Sets up a Timer till Bidding Ends */
+  setTimeout(() => {
+    // 1. Fetch Product by ID
+    // 2. Get Highest Bids in Array
+    // 3. Set Winner on Product
+  }, (Date.parse(expiryDate) - Date.now()));
+
   return res.status(201).send({ message: "Product Added Successfully", data: product });
 };
 
