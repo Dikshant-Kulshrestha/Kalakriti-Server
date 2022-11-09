@@ -1,15 +1,17 @@
 const { Types } = require("mongoose");
+const Category = require("../models/Category.js");
 const Product = require("../models/Product.js");
 const User = require("../models/User.js");
 
 const addProduct = async (req, res) => {
-  const { title, description, amount, expiryDate } = JSON.parse(req.body.data);
+  const { title, description, amount, expiryDate, categoryId } = JSON.parse(req.body.data);
 
   const product = new Product({
     owner: req.token.id,
     title: title,
     description: description,
     basePrice: amount,
+    category: new Types.ObjectId(categoryId),
     endTs: Date.parse(expiryDate),
   });
 
@@ -82,4 +84,10 @@ const addRating = async (req, res) => {
   return res.status(200).send({ message: "Rating Added Successfully", data: product });
 };
 
-module.exports = { addProduct, getProduct, addRating };
+const getCategories = async (req, res) => {
+  const categories = await Category.find({ });
+  
+  return res.status(200).send({ message: "Successfully Fetched Categories", data: categories });
+};
+
+module.exports = { addProduct, getProduct, addRating, getCategories };
