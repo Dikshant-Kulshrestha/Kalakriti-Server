@@ -34,6 +34,7 @@ const productSchema = new mongoose.Schema({
     },
   ],
   rating: Number,
+  review: String,
 
   startTs: {
     type: Date,

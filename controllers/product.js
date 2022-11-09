@@ -47,7 +47,7 @@ const getProduct = async (req, res) => {
 };
 
 const addRating = async (req, res) => {
-  const { pId, stars } = req.body;
+  const { pId, stars, review } = req.body;
 
   const product = await Product.findById(pId).populate("owner bids.owner", "firstName lastName ratings");
 
@@ -65,7 +65,8 @@ const addRating = async (req, res) => {
     }
   }
 
-  product.rating = stars;
+  if (product.rating) product.rating = stars;
+  if (product.review) product.review = description;
 
   const rating = {
     product: product._id,
@@ -86,7 +87,7 @@ const addRating = async (req, res) => {
 
 const getCategories = async (req, res) => {
   const categories = await Category.find({ });
-  
+
   return res.status(200).send({ message: "Successfully Fetched Categories", data: categories });
 };
 
