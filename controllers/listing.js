@@ -28,4 +28,16 @@ const getProductsByUser = async (req, res) => {
   return res.status(200).send({ message: "Successfully Fetched Products", data: products });
 };
 
-module.exports = { getExploreProducts, getHomepageProduct, getProductsByUser };
+const searchProducts = async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).send({ error: "Please Enter a Valid Search Term" });
+  }
+
+  const products = await Product.find({ $text: { $search: query } });
+
+  return res.status(200).send({ message: "Successfully Fetched Search Results", data: products });
+};
+
+module.exports = { getExploreProducts, getHomepageProduct, getProductsByUser, searchProducts };

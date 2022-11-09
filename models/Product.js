@@ -59,4 +59,6 @@ const productSchema = new mongoose.Schema({
   }
 });
 
+productSchema.index({ name: "text", title: "text", description: "text" });
+
 module.exports = mongoose.model("product", productSchema);
