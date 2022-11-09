@@ -69,6 +69,7 @@ const getBidsByUser = async (req, res) => {
         title: 1,
         description: 1,
         images: 1,
+        winner: 1,
         bids: {
           $filter: { input: "$bids", as: "bid", cond: { $eq: [ "$$bid.owner", new Types.ObjectId(owner) ] } }
         }

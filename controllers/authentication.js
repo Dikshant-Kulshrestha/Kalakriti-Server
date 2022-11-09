@@ -30,7 +30,7 @@ const login = async (req, res) => {
   };
 
   res.status(200).send({
-    jwt: { token, id: user._id },
+    jwt: { token, id: user._id, name: user.firstName },
     user: userData,
   });
 };

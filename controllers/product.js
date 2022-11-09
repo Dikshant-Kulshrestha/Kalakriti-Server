@@ -1,3 +1,4 @@
+const { Types } = require("mongoose");
 const Product = require("../models/Product.js");
 const User = require("../models/User.js");
 
@@ -17,10 +18,19 @@ const addProduct = async (req, res) => {
   await product.save();
 
   /* Sets up a Timer till Bidding Ends */
-  setTimeout(() => {
-    // 1. Fetch Product by ID
-    // 2. Get Highest Bids in Array
-    // 3. Set Winner on Product
+  setTimeout(async () => {
+    const newProduct = await Product.findById(product._id);
+
+    if (newProduct && newProduct.bids && newProduct.bids.length) {
+      const winningBid = newProduct.bids[newProduct.bids.length - 1];
+
+      await Product.updateOne({ _id: new Types.ObjectId(product._id) }, { $set: { "winner.user": winningBid.owner, "winner.amount": winningBid.amount } });
+
+      newProduct.winner.user = winningBid.owner;
+      newProduct.winner.amount = winningBid.amount;
+    }
+
+    /* TODO: Send a Mail to the Winner Here */
   }, (Date.parse(expiryDate) - Date.now()));
 
   return res.status(201).send({ message: "Product Added Successfully", data: product });
