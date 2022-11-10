@@ -1,4 +1,5 @@
 const { Types, isValidObjectId } = require("mongoose");
+const Category = require("../models/Category.js");
 const Product = require("../models/Product.js");
 
 const getExploreProducts = async (req, res) => {
@@ -6,6 +7,25 @@ const getExploreProducts = async (req, res) => {
   const finished = await Product.find({ endTs: { $lte: Date.now() } }).sort({ endTs: +1 });
 
   return res.status(200).send({ message: "Successfully Fetched Products", data: [...live, ...finished] });
+};
+
+const getCategoryProducts = async (req, res) => {
+  const { category: cId } = req.query;
+
+  const liveQuery = { endTs: { $gt: Date.now() } };
+  const finishedQuery = { endTs: { $lte: Date.now() } };
+
+  if (cId) {
+    liveQuery.category = new Types.ObjectId(cId);
+    finishedQuery.category = new Types.ObjectId(cId);
+  }
+
+  const category = await Category.findById(cId);
+
+  const live = await Product.find(liveQuery).sort({ endTs: +1 });
+  const finished = await Product.find(finishedQuery).sort({ endTs: +1 });
+
+  return res.status(200).send({ message: "Successfully Fetched Products", data: { category: category, products: [...live, ...finished] } });
 };
 
 const getHomepageProduct = async (req, res) => {
@@ -40,4 +60,4 @@ const searchProducts = async (req, res) => {
   return res.status(200).send({ message: "Successfully Fetched Search Results", data: products });
 };
 
-module.exports = { getExploreProducts, getHomepageProduct, getProductsByUser, searchProducts };
+module.exports = { getExploreProducts, getCategoryProducts, getHomepageProduct, getProductsByUser, searchProducts };

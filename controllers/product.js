@@ -7,7 +7,7 @@ const addProduct = async (req, res) => {
   const { title, description, amount, expiryDate, categoryId } = JSON.parse(req.body.data);
 
   const product = new Product({
-    owner: req.token.id,
+    owner: new Types.ObjectId(req.token.id),
     title: title,
     description: description,
     basePrice: amount,
