@@ -34,7 +34,7 @@ const login = async (req, res) => {
     user: userData,
   });
 };
-
+//test
 const register = async (req, res) => {
   const { email, password, fName, lName, phone } = req.body;
 
